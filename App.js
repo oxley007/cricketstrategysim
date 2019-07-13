@@ -1,81 +1,110 @@
-import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow
+ */
 
-import firebase from 'react-native-firebase';
+import React, {Component} from 'react';
+import {Platform, StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions, Image} from 'react-native';
+import {
+      createStackNavigator,
+      createAppContainer,
+      createDrawerNavigator,
+      DrawerItems
+    } from 'react-navigation';
+//import LoginScreen from './Components/App/LoginScreen.js';
+//import Scorebook from './Components/App/Scorebook.js';
+//import ResetHome from './Components/App/ResetHome.js';
+//import FeedbackHome from './Components/App/FeedbackHome.js';
+//import ProHome from './Components/App/ProHome.js';
+//import FinishTransaction from './Components/App/FinishTransaction.js';
+//import Settings from './Components/App/Settings.js';
+import GameList from './Components/App/GameList.js';
+import Loading from './Components/App/Loading.js';
+import SignUp from './Components/App/SignUp.js';
+import Login from './Components/App/Login.js';
+import Game from './Components/Game/Game.js';
+import OverBowled from './Components/GameOverBowled/OverBowled.js';
+import Scorebook from './Components/App/Scorebook.js';
+import Main from './Components/App/Main.js';
+import GameAddPlayers from './Components/GameAddPlayers/GameAddPlayers.js';
+//import HeaderDisplay from './Components/HeaderComponents/HeaderDisplay.js';
+import {Header,Left,Right,Icon} from 'native-base';
 
-export default class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
+  android:
+    'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
+});
 
-  async componentDidMount() {
-    // TODO: You: Do firebase things
-    // const { user } = await firebase.auth().signInAnonymously();
-    // console.warn('User -> ', user.toJSON());
+/*
+const { width } = Dimensions.get('window');
+*/
 
-    // await firebase.analytics().logEvent('foo', { bar: '123'});
-  }
-
+class Hidden extends React.Component {
   render() {
-    return (
-      <ScrollView>
-        <View style={styles.container}>
-          <Image source={require('./assets/ReactNativeFirebase.png')} style={[styles.logo]}/>
-          <Text style={styles.welcome}>
-            Welcome to {'\n'} React Native Firebase
-          </Text>
-          <Text style={styles.instructions}>
-            To get started, edit App.js
-          </Text>
-          {Platform.OS === 'ios' ? (
-            <Text style={styles.instructions}>
-              Press Cmd+R to reload,{'\n'}
-              Cmd+D or shake for dev menu
-            </Text>
-          ) : (
-            <Text style={styles.instructions}>
-              Double tap R on your keyboard to reload,{'\n'}
-              Cmd+M or shake for dev menu
-            </Text>
-          )}
-          <View style={styles.modules}>
-            <Text style={styles.modulesHeader}>The following Firebase modules are pre-installed:</Text>
-            {firebase.admob.nativeModuleExists && <Text style={styles.module}>admob()</Text>}
-            {firebase.analytics.nativeModuleExists && <Text style={styles.module}>analytics()</Text>}
-            {firebase.auth.nativeModuleExists && <Text style={styles.module}>auth()</Text>}
-            {firebase.config.nativeModuleExists && <Text style={styles.module}>config()</Text>}
-            {firebase.crashlytics.nativeModuleExists && <Text style={styles.module}>crashlytics()</Text>}
-            {firebase.database.nativeModuleExists && <Text style={styles.module}>database()</Text>}
-            {firebase.firestore.nativeModuleExists && <Text style={styles.module}>firestore()</Text>}
-            {firebase.functions.nativeModuleExists && <Text style={styles.module}>functions()</Text>}
-            {firebase.iid.nativeModuleExists && <Text style={styles.module}>iid()</Text>}
-            {firebase.invites.nativeModuleExists && <Text style={styles.module}>invites()</Text>}
-            {firebase.links.nativeModuleExists && <Text style={styles.module}>links()</Text>}
-            {firebase.messaging.nativeModuleExists && <Text style={styles.module}>messaging()</Text>}
-            {firebase.notifications.nativeModuleExists && <Text style={styles.module}>notifications()</Text>}
-            {firebase.perf.nativeModuleExists && <Text style={styles.module}>perf()</Text>}
-            {firebase.storage.nativeModuleExists && <Text style={styles.module}>storage()</Text>}
-          </View>
-        </View>
-      </ScrollView>
-    );
+    return null;
   }
 }
+
+const CustomDrawerComponent = (props) => (
+  <SafeAreaView style={{ flex: 1, backgroundColor: '#12c2e9' }}>
+    <View style={{ height: 150, alignItems: 'center', justifyContent: 'center' }}>
+      <Image source={require('./assets/4dot6-logo-500px.png')} style={{height: 120, width: 120, borderRadius: 60, borderColor: '#fff', borderWidth:4}} />
+    </View>
+    <ScrollView>
+      <DrawerItems {...props} />
+    </ScrollView>
+  </SafeAreaView>
+  );
+
+const RootStack = createDrawerNavigator(
+  {
+    Loading: {
+      screen: Loading,
+    },
+    SignUp: {
+      screen: SignUp,
+    },
+    Login: {
+      screen: Login,
+    },
+    GameList: {
+      screen: GameList,
+    },
+    Game: {
+      screen: Game,
+    },
+    OverBowled: {
+      screen: OverBowled,
+    },
+    GameAddPlayers: {
+      screen: GameAddPlayers,
+    }
+  },
+  {
+    contentComponent: CustomDrawerComponent,
+    //drawerWidth: width,
+    contentOptions: {
+      activeTintColor: '#fff'
+    }
+  }
+);
+
+
+  const App = createAppContainer(RootStack);
+
+  export default App;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  logo: {
-    height: 120,
-    marginBottom: 16,
-    marginTop: 64,
-    padding: 10,
-    width: 135,
+    backgroundColor: '#12c2e9',
   },
   welcome: {
     fontSize: 20,
@@ -84,19 +113,7 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#333333',
+    color: '#fff',
     marginBottom: 5,
   },
-  modules: {
-    margin: 20,
-  },
-  modulesHeader: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  module: {
-    fontSize: 14,
-    marginTop: 4,
-    textAlign: 'center',
-  }
 });

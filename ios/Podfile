@@ -1,8 +1,8 @@
 # Uncomment the next line to define a global platform for your project
 platform :ios, '9.0'
 
-target 'RNFirebaseStarter' do
-  # Pods for RNFirebaseStarter
+target 'CricketStarategySimulatorApp' do
+  # Pods for CricketStarategySimulatorApp
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
@@ -25,15 +25,25 @@ target 'RNFirebaseStarter' do
   pod 'Fabric', '~> 1.9.0'
   pod 'Crashlytics', '~> 3.12.0'
 
+  pod 'react-native-haptic-feedback', :path => '../node_modules/react-native-haptic-feedback'
+
+  pod 'RNIap', :path => '../node_modules/react-native-iap'
+
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 end
 
-target 'RNFirebaseStarter-tvOS' do
+target 'CricketStarategySimulatorApp-tvOS' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
-  # Pods for RNFirebaseStarter-tvOS
+  # Pods for CricketStarategySimulatorApp-tvOS
 
-  target 'RNFirebaseStarter-tvOSTests' do
+  target 'CricketStarategySimulatorApp-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
