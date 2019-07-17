@@ -16,6 +16,7 @@ import GameDisplayRuns from './GameDisplayRuns';
 import DisplayScorecard from '../Game/DisplayScorecard';
 import GameDisplayTotalRuns from '../Game/GameDisplayTotalRuns';
 import RunsPerBall from '../Board/RunsPerBall';
+import BoardDisplayTopAttack from '../Board/BoardDisplayTopAttack';
 
 import Board from '../Board/Board';
 
@@ -239,6 +240,7 @@ onCollectionUpdate = (querySnapshot) => {
       <Grid>
           {this.testRuns()}
       </Grid>
+      <BoardDisplayTopAttack />
       <GameDisplayRuns />
       <Board navigation={this.props.navigation} />
       <RunsPerBall />

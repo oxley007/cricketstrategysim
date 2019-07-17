@@ -62,6 +62,8 @@ class BoardDisplayTopAttack extends Component {
           <Row>
           <Text>7</Text>
           </Row>
+          </Col>
+          <Col>
           <Row>
           <Text>A</Text>
           </Row>
@@ -86,6 +88,33 @@ class BoardDisplayTopAttack extends Component {
           <Row>
           <Text>6</Text>
           </Row>
+          </Col>
+          <Col>
+          <Row>
+          <Text>2</Text>
+          </Row>
+          <Row>
+          <Text>1</Text>
+          </Row>
+          <Row>
+          <Text>0</Text>
+          </Row>
+          <Row>
+          <Text>2</Text>
+          </Row>
+          <Row>
+          <Text>0</Text>
+          </Row>
+          <Row>
+          <Text>1</Text>
+          </Row>
+          <Row>
+          <Text>4</Text>
+          </Row>
+          <Row>
+          <Text>0</Text>
+          </Row>
+          </Col>
         </Grid>
     );
   }
