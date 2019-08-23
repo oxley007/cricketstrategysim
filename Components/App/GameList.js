@@ -68,9 +68,18 @@ addnewGame = () => {
     let gameID = uuidv4();
     console.log(gameID);
 
+    let now = new Date();
+    let isoString = now.toISOString();
+    console.log(isoString);
+    dateTime = isoString.replace(/T/, '').replace(/\..+/, '').replace(/-/, '').replace(/:/, '').replace(/-/, '').replace(/:/, '');
+    console.log(dateTime);
+
+
   firebase.firestore().collection(currentUser.uid).add({
     gameId: gameID,
     gameName: 'Cricket Strategy Simulator',
+    displayId: dateTime,
+    gameResult: 0,
   })
   .then(this.setState({
     gameID: gameID,
@@ -79,22 +88,39 @@ addnewGame = () => {
     const { gameID } = this.state
     this.props.dispatch(updateGameId(this.state.gameID));
   }))
-  .then(this.props.navigation.navigate('Game'))
+  //.then(this.props.navigation.navigate('Game'))
+  .then(this.props.navigation.navigate('SimulateFirstInnings'))
 
 }
 
 onCollectionUpdate = (querySnapshot) => {
   const games = [];
   querySnapshot.forEach((doc) => {
-    const { gameId, gameName } = doc.data();
+    console.log(doc.data());
+    const { gameId, gameName, firstInningsRuns, totalRuns, topScore, topScorePlayer, topSecondScore, topSecondScorePlayer, topScoreBalls, topSecondBalls, displayId, totalWickets, gameResult } = doc.data();
+
+
 
     games.push({
       key: doc.id,
       doc, // DocumentSnapshot
       gameId,
       gameName,
+      firstInningsRuns,
+      totalRuns,
+      topScore,
+      topScorePlayer,
+      topSecondScore,
+      topSecondScorePlayer,
+      topScoreBalls,
+      topSecondBalls,
+      displayId,
+      totalWickets,
+      gameResult,
     });
   });
+
+  console.log(games);
 
   this.setState({
     games,
@@ -105,21 +131,54 @@ onCollectionUpdate = (querySnapshot) => {
 
 
   games = () => {
+    //const games = this.state.games.sort( (a, b) => new Date(b.date) - new Date(a.date) )
+    //const games = this.state.games.sort((a, b) => new Date(...a.date.split('/').reverse()) - new Date(...b.date.split('/').reverse()));
+
+console.log(this.state.games);
+
+/*
+  this.state.games.sort(function(a,b){
+    console.log('a date ' + a.displayId);
+    console.log('b date ' + b.displayId);
+  // Turn your strings into dates, and then subtract them
+  // to get a value that is either negative, positive, or zero.
+  return b.displayId - a.displayId;
+})
+
+console.log(this.state.games);
+*/
+
+/*
+this.state.games.sort(function(a, b) {
+  console.log('a date ' + a.date);
+  console.log('b date ' + b.date);
+    a = new Date(a.date);
+    b = new Date(b.date);
+    return a>b ? -1 : a<b ? 1 : 0;
+});
+*/
+  //console.log(gamesDates);
+
+  // order by ascending
+
+
+const games = this.state.games.sort((a, b) => {
+      if (a.displayId < b.displayId) return -1;
+      if (a.displayId > b.displayId) return 1;
+      return 0;
+    }).reverse();
+
+    console.log(games);
+
+    //console.log(this.state.games[0].date);
     return (
       <Col>
       <Row>
-    <ScrollView>
-      <Text>Games:</Text>
-    </ScrollView>
-    </Row>
-      <Row>
       <FlatList
-          data={this.state.games}
+          data={games}
           renderItem={({ item }) => <DisplayGames {...item} />}
         />
       </Row>
-
-
     </Col>
     )
 
@@ -213,9 +272,9 @@ const styles = StyleSheet.create({
     },
     linearGradient: {
       flex: 1,
-      paddingLeft: 15,
-      paddingRight: 15,
-      borderRadius: 5
+      //paddingLeft: 15,
+      //paddingRight: 15,
+      //borderRadius: 5
     },
     textHeader: {
       color: '#fff',

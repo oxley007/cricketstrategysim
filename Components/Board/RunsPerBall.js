@@ -267,6 +267,7 @@ class RunsPerBall extends Component {
 
     return (
         <Grid style={styles.rowPadding}>
+          <View style={styles.horizontalRule} />
           {this.RunsPerOverDsiplay()}
           <View style={styles.horizontalRule} />
         </Grid>

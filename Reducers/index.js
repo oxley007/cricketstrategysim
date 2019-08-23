@@ -17,6 +17,7 @@ import widecount from './wideCount';
 import batterRuns from './batterRuns';
 import gameID from './gameId';
 import gameRuns from './gameRuns';
+import players from './players';
 
 export default combineReducers({
   user,
@@ -36,4 +37,5 @@ export default combineReducers({
   batterRuns,
   gameID,
   gameRuns,
+  players,
 });

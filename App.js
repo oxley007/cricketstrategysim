@@ -26,7 +26,12 @@ import Loading from './Components/App/Loading.js';
 import SignUp from './Components/App/SignUp.js';
 import Login from './Components/App/Login.js';
 import Game from './Components/Game/Game.js';
+import SimulateFirstInnings from './Components/Game/SimulateFirstInnings.js';
 import OverBowled from './Components/GameOverBowled/OverBowled.js';
+import WicketCheck from './Components/GameWicketCheck/WicketCheck.js';
+import WicketOut from './Components/GameWicketCheck/WicketOut.js';
+import WicketNotOut from './Components/GameWicketCheck/WicketNotOut.js';
+import TooCloseToCall from './Components/GameWicketCheck/TooCloseToCall.js';
 import Scorebook from './Components/App/Scorebook.js';
 import Main from './Components/App/Main.js';
 import GameAddPlayers from './Components/GameAddPlayers/GameAddPlayers.js';
@@ -81,8 +86,23 @@ const RootStack = createDrawerNavigator(
     OverBowled: {
       screen: OverBowled,
     },
+    WicketCheck: {
+      screen: WicketCheck,
+    },
+    WicketOut: {
+      screen: WicketOut,
+    },
+    WicketNotOut: {
+      screen: WicketNotOut,
+    },
+    TooCloseToCall: {
+      screen: TooCloseToCall,
+    },
     GameAddPlayers: {
       screen: GameAddPlayers,
+    },
+    SimulateFirstInnings: {
+      screen: SimulateFirstInnings,
     }
   },
   {
