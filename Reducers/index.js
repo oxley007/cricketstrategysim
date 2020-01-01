@@ -18,6 +18,13 @@ import batterRuns from './batterRuns';
 import gameID from './gameId';
 import gameRuns from './gameRuns';
 import players from './players';
+import teamPlayers from './teamPlayers';
+import games from './games';
+import gamesList from './gamesList';
+import firstInningsRuns from './firstInningsRuns';
+import playerStats from './playerStats';
+import gameCards from './gameCards';
+
 
 export default combineReducers({
   user,
@@ -38,4 +45,10 @@ export default combineReducers({
   gameID,
   gameRuns,
   players,
+  teamPlayers,
+  games,
+  gamesList,
+  firstInningsRuns,
+  playerStats,
+  gameCards,
 });

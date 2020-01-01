@@ -4,11 +4,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Header, Left, Right, Icon, Content, Container, H1, H2, H3, Footer, Button } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { StyleSheet, PixelRatio, ScrollView, View, Text, TextInput, Platform, Image, FlatList, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 
 import { connect } from "react-redux";
 import { updateGameId } from '../../Reducers/gameId';
 import { updateGameRuns } from '../../Reducers/gameRuns';
 import { updatePlayers } from '../../Reducers/players';
+import { updateGames } from '../../Reducers/games';
+import { updateTeamPlayers } from '../../Reducers/teamPlayers';
+import { updateGamesList } from '../../Reducers/gamesList';
+import { updateFirstInningsRuns } from '../../Reducers/firstInningsRuns';
 
 import BallDiff from '../../Util/BallDiff.js';
 import CardBoard from '../../Util/CardBoard.js';
@@ -34,6 +39,9 @@ class SimulateFirstInnings extends React.Component {
         totalWickets: 0,
         totalOver: 0,
         totalBall: 0,
+        newGameFlag: 0,
+        runRate: 'RR: ~',
+        n: 0,
     };
   }
 
@@ -46,13 +54,20 @@ class SimulateFirstInnings extends React.Component {
     over: this.props.ball.over || 0,
     players: this.props.players.players || [],
     facingBall: this.props.players.facingBall || 1,
+    games: this.props.games.games || [],
+    teamPlayers: this.props.teamPlayers.teamPlayers || [],
+    gamesList: this.props.gamesList.gamesList || [],
+    firstInningsRuns: this.props.firstInningsRuns.firstInningsRuns || 0,
   };
 
-  handleChange = ( gameID, gameRuns, ball, players ) => {
+  handleChange = ( gameID, gameRuns, ball, players, games, teamPlayers, gamesList ) => {
     this.setState({ gameID });
     this.setState({ gameRuns });
     this.setState({ ball });
     this.setState({ players });
+    this.setState({ games });
+    this.setState({ teamPlayers });
+    this.setState({ gamesList });
   };
 
   incrementer = () => {
@@ -62,23 +77,104 @@ class SimulateFirstInnings extends React.Component {
     this.setState({incrementer: incrementer});
   }
 
+
   componentDidMount() {
+
+
+
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+    clearInterval(this.interval);
+  }
+
+  simulateInnings = () => {
+    console.log(this.props.games.games);
+    console.log(this.state.totalWickets);
+    console.log(this.state.totalRuns);
+    console.log(this.state.totalOver);
+    console.log(this.state.totalBall);
+    console.log(this.state.runRate);
+    console.log(this.state.simRuns);
+    console.log(this.state.simRunEvents);
+    console.log(n);
+    let n = this.state.n;
+    //let n = this.onLoad();
+    console.log(n);
+
+    if (n === undefined) {
+      n = 0;
+    }
     const { currentUser } = firebase.auth()
+    console.log(n);
     this.setState({ currentUser })
+    console.log(n);
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+    console.log(n);
+    this.refPlayers.onSnapshot(this.onDocCollectionUpdate)
+    console.log(n);
+    console.log(this.props.games.games);
     //this.refPlayers.onSnapshot(this.onDocCollectionUpdate)
 
       let time = 250
-      let n = 0;
+      n = 0;
+      const simRuns = 0;
+      this.setState({ simRuns: simRuns });
+
+      const simRunEvents = [];
+      this.setState({ simRunEvents: simRunEvents });
+      console.log(n);
+      console.log(this.state.newGameFlag);
       this.interval = setInterval(() => {
         n++
-        if (n < 121 && this.state.totalWickets < 10) {
+        console.log(n);
+        console.log(this.state.newGameFlag);
+        console.log(this.state.totalWickets);
+      if (n < 121 && this.state.totalWickets < 10 && this.state.newGameFlag === 1) {
         this.simulateRuns();
       }
+      else if (this.state.newGameFlag === 0) {
+        n = 0;
+
+        console.log('n')
+
+        const totalWickets = 0
+        this.setState({ totalWickets: totalWickets });
+
+        let totalRuns = 0;
+        this.setState({ totalRuns: totalRuns });
+
+        const totalOver = 0;
+        this.setState({ totalOver: totalOver });
+
+        const totalBall = 0;
+        this.setState({ totalBall: totalBall });
+
+        const runRate = 0;
+        this.setState({ runRate: runRate });
+
+        const simRuns = 0;
+        this.setState({ simRuns: simRuns });
+
+        const simRunEvents = [];
+        this.setState({ simRunEvents: simRunEvents });
+
+        }
       else {
         const firstInningsRuns = this.state.totalRuns;
-        const gameId = this.props.gameID.gameID
 
+        this.setState({
+          firstInningsRuns: firstInningsRuns,
+        }, function () {
+          const { firstInningsRuns } = this.state
+          this.props.dispatch(updateFirstInningsRuns(this.state.firstInningsRuns));
+        })
+
+        const gameId = this.props.gameID.gameID;
+        const teamPlayers =this.props.teamPlayers.teamPlayers;
+
+        console.log(this.props.games.games);
         let currentKey = this.state.games.map(acc => {
           console.log(acc);
           if (acc.gameId  === gameId) {
@@ -97,23 +193,120 @@ class SimulateFirstInnings extends React.Component {
             firstInningsRuns: firstInningsRuns,
         });
 
+        console.log(this.props.games.games);
+        let games = this.props.games.games;
+        console.log(games);
+
+        const { navigation } = this.props;
+        const displayId = navigation.getParam('displayId', gameId);  //.it might need tobe 'displayId' (in brackets)
+        console.log(displayId);
+
+        console.log(filtered[0]);
+
+        const game = {
+          displayId: displayId,
+          firstInningsRuns: firstInningsRuns,
+          gameId: gameId,
+          gameName: "Cricket Strategy Sim",
+          gameResult: 0,
+          gameRunEvents: [],
+          players: teamPlayers,
+          key: filtered[0],
+          topScore: 0,
+          topScoreBalls: 0,
+          topScorePlayer: '',
+          topSecondBalls: 0,
+          topSecondScore: 0,
+          topSecondScorePlayer: '',
+          totalRuns: 0,
+          totalWickets: 0,
+          keyId: '',
+        }
+
+        console.log(game);
+
+        //games.push({displayId: displayId, firstInningsRuns: firstInningsRuns, gameId: gameId, gameName: "Cricket Strategy Sim", gameResult: 0, key: currentKey, topScore: 0, topScoreBalls: 0, topScorePlayer: '', topSecondBalls: 0, topSecondScore: 0, topSecondScorePlayer: '', totalRuns: 0, totalWickets: 0});
+        console.log(games);
+        games.unshift(game);
+        console.log(games);
+
+        this.setState({
+          games: games,
+        }, function () {
+          const { games } = this.state
+          this.props.dispatch(updateGames(this.state.games));
+        })
+        console.log(this.props.games.games);
+
+        let newGameFlag = 2;
+        this.setState({newGameFlag: newGameFlag});
+
+        /*
+        console.log(this.props.gamesList.gamesList);
+        let gamesTwo = this.props.gamesList.gamesList;
+        console.log(gamesTwo);
+
+        gamesTwo.unshift(game);
+        console.log(gamesTwo);
+
+        console.log(this.props.gamesList.gamesList);
+        this.setState({
+          gamesList: gamesTwo,
+        }, function () {
+          const { gamesList } = this.state
+          this.props.dispatch(updateGamesList(this.state.gamesList));
+        })
+        console.log(this.props.gamesList.gamesList);
+        */
+
+
         clearInterval(this.interval);
+
 
       }
         console.log(n);
       }, time);
   }
 
-  componentWillUnmount() {
-    this.unsubscribe();
-    clearInterval(this.interval);
+
+  onLoad = () => {
+
+    console.log('n')
+
+    const totalWickets = 0
+    this.setState({ totalWickets: totalWickets });
+
+    const newGameFlag = 1;
+    //const newGameFlag = 0;
+    this.setState({ newGameFlag: newGameFlag });
+    console.log(this.state.newGameFlag);
+
+    let totalRuns = 0;
+    this.setState({ totalRuns: totalRuns });
+
+    const totalOver = 0;
+    this.setState({ totalOver: totalOver });
+
+    const totalBall = 0;
+    this.setState({ totalBall: totalBall });
+
+    const runRate = 0;
+    this.setState({ runRate: runRate });
+
+    const n = 0;
+
+    return n;
+
   }
 
   onCollectionUpdate = (querySnapshot) => {
+    console.log(this.props.games.games);
     const games = [];
+    console.log(this.props.games.games);
+    let keyId = "";
     querySnapshot.forEach((doc) => {
       const { gameId, gameName } = doc.data();
-
+      keyId = doc.id
       games.push({
         key: doc.id,
         doc, // DocumentSnapshot
@@ -122,14 +315,58 @@ class SimulateFirstInnings extends React.Component {
       });
     });
 
+    console.log(keyId);
+
     this.setState({
       games,
       loading: false,
+      keyId: keyId,
    });
+   console.log(this.props.games.games);
   }
+
+  onDocCollectionUpdate = (documentSnapshot) => {
+    console.log(this.state.facingBall);
+
+    let allPlayers = this.props.players.players;
+    let facingBall = this.state.facingBall;
+
+    console.log(allPlayers);
+    console.log(facingBall);
+
+
+    if (allPlayers === [] || allPlayers === undefined || allPlayers === null || allPlayers.length < 1 ) {
+      console.log('allplays null hit?');
+      allPlayers = documentSnapshot.data().players;
+    }
+    else {
+      console.log('else all players from redux.');
+      allPlayers = this.props.players.players;
+    }
+
+
+    console.log(allPlayers);
+    console.log(facingBall);
+
+
+    this.setState({
+      players: allPlayers,
+      facingBall: 1,
+    }, function () {
+      const { players, facingBall } = this.state
+      this.props.dispatch(updatePlayers(this.state.players, this.state.facingBall));
+    })
+
+    console.log(this.props.players.players);
+
+    console.log('finished onDocCollectionUpdate');
+
+    }
 
 
 simulateRuns = () => {
+  console.log(this.props.games.games);
+  let gameRunEvents = this.state.simRunEvents;
   const min = 0;
   const max = 27;
   const n = 0;
@@ -152,9 +389,26 @@ simulateRuns = () => {
   const randOne = Number(randOneS);
   const randTwo = Number(randTwoS);
 
-  const boardRuns = CardBoard.getBoardRuns(randOne, randTwo);
+  const boardRuns = CardBoard.getBoardRuns(randOne, randTwo, 0, false, 0, false, 2, false, 0, false, 1, false, 0, false, 0, true, null, null);
   const runs = boardRuns[0];
-  const wicketEvent = boardRuns[1];
+  let wicketEvent = boardRuns[1];
+  console.log(wicketEvent);
+
+  if (wicketEvent === true) {
+    const minWicket = 0;
+    const maxWicket = 1;
+    let randWicket =  minWicket + (Math.random() * (maxWicket-minWicket));
+    //randWicket = Math.floor(randWicket)
+    randWicket = Math.round(randWicket);
+    console.log(randWicket);
+    console.log(wicketEvent);
+    if (randWicket < 1) {
+      wicketEvent = true;
+    }
+    else {
+      wicketEvent = false;
+    }
+  }
 
   console.log(runs);
   this.setState({ simRuns: runs });
@@ -175,16 +429,18 @@ simulateRuns = () => {
   this.setState({ totalOver: totalOver });
   let totalBall = display[3];
   this.setState({ totalBall: totalBall });
+  let runRate = display[4];
+  this.setState({ runRate: runRate });
 
-  let getRunRate = this.getRunRate();
-  let runRate = getRunRate[0];
+  //let getRunRate = this.getRunRate();
+  //let runRate = getRunRate[0];
 //})
 
 
 }
 
 getDisplayRunsTotal() {
-
+  console.log(this.props.games.games);
   let gameRunEvents = this.state.simRunEvents;
 
   let sum = a => a.reduce((acc, item) => acc + item);
@@ -209,60 +465,156 @@ getDisplayRunsTotal() {
   let totalOver = totalBallDiff[0];
 
   let totalBall = totalBallDiff[1];
+  let overValue = totalOver + '.' +  totalBall;
+  let numberOverValue = Number(overValue);
   //---------- end of calularte overs
 
-  return [totalRuns, totalWickets, totalOver, totalBall]
+  //workout run rate:
+  console.log(numberOverValue);
+  let runRate = totalRuns / numberOverValue;
+  console.log(runRate);
+
+  if (numberOverValue < 1) {
+    //let runRateOneDecimal = '';
+    runRate = 'RR: ~';
+  }
+  else {
+    let runRateOneDecimal = parseFloat(runRate).toFixed(1);
+    runRate = 'RR: ' + runRateOneDecimal;
+  }
+
+  return [totalRuns, totalWickets, totalOver, totalBall, runRate]
 }
 
-getRunRate() {
-  let gameRunEvents = this.state.simRunEvents;
-  let sum = a => a.reduce((acc, item) => acc + item);
+goToSefcondInnings = () => {
 
-//----------calculate overs
-let ball = 0;
+  console.log(this.state.totalRuns);
+  const firstInningsRuns = this.state.totalRuns
+  console.log(firstInningsRuns);
+  console.log(this.props.games.games);
+  const { navigation } = this.props;
+  const displayId = navigation.getParam('displayId');  //.it might need tobe 'displayId' (in brackets)
+  console.log(displayId);
+  let newGameFlag = 0;
+  this.setState({newGameFlag: newGameFlag});
 
-let legitBall = BallDiff.getLegitBall(ball, gameRunEvents);
-let ballTotal = legitBall[0];
-console.log(ballTotal);
+  const teamPlayers = this.props.teamPlayers.teamPlayers;
+  console.log(teamPlayers);
 
-ball = sum(ballTotal.map(acc => Number(acc)));
-console.log(ball);
+  this.setState({
+    players: teamPlayers,
+    facingBall: 1,
+  }, function () {
+    const { players, facingBall } = this.state
+    this.props.dispatch(updatePlayers(this.state.players, this.state.facingBall));
+  })
 
-let totalBallDiff = BallDiff.getpartnershipDiffTotal(ball);
-let totalOver = totalBallDiff[0];
-console.log(totalOver);
+  const gameRunEvents = this.props.gameRuns.gameRunEvents;
 
-let totalBall = totalBallDiff[1];
-let overValue = totalOver + '.' +  totalBall;
-let numberOverValue = Number(overValue);
+  this.setState({
+    gameRunEvents: gameRunEvents,
+    overBowled: false,
+  }, function () {
+    const { gameRunEvents, overBowled } = this.state
+    this.props.dispatch(updateGameRuns(this.state.gameRunEvents, this.state.overBowled));
+  })
 
-//---------- end of calularte overs
+  const totalWicketsReset = 0
+  this.setState({ totalWickets: totalWicketsReset });
 
-//Calculate the total runs
-let totalRuns = sum(gameRunEvents.map(acc => Number(acc.runsValue)));
-console.log(totalRuns);
+  //const newGameFlag = 1;
+  const newGameFlagReset = 0;
+  this.setState({ newGameFlag: newGameFlagReset });
+  console.log(this.state.newGameFlag);
 
-//workout run rate:
-console.log(numberOverValue);
-let runRate = totalRuns / numberOverValue;
-console.log(runRate);
+  let totalRunsReset = 0;
+  this.setState({ totalRuns: totalRunsReset });
 
-if (numberOverValue < 1) {
-  let runRateOneDecimal = '';
-  return ['RR: ~'];
+  const totalOverReset = 0;
+  this.setState({ totalOver: totalOverReset });
+
+  const totalBallReset = 0;
+  this.setState({ totalBall: totalBallReset });
+
+  const runRateReset = 0;
+  this.setState({ runRate: runRateReset });
+
+  this.props.navigation.navigate('Game', {
+    displayId: displayId,
+    firstInningsRuns: firstInningsRuns,
+  });
 }
-else {
-  let runRateOneDecimal = parseFloat(runRate).toFixed(1);
-  return ['RR: ' + runRateOneDecimal];
+
+getSimRuns = () => {
+  console.log(this.props.games.games);
+  if (this.state.newGameFlag === 0) {
+    console.log('newGameFlag === 0');
+    return (
+    <Col style={styles.ballCircle}>
+    <Button rounded large warning style={styles.generateInningsLargeButton}
+        onPress={() => this.changeGameFlag()} >
+        <Text style={styles.generateInningsButtonText}>Generatre innings <Icon name='ios-arrow-forward' style={styles.generateInningsButtonText} /></Text>
+      </Button>
+    </Col>
+    )
+  }
+  else {
+  return (
+    <Col style={styles.ballCircle}>
+      <Text style={styles.textBall}>{this.state.simRuns}</Text>
+    </Col>
+  )
 }
+}
+
+changeGameFlag = () => {
+  const n = this.onLoad();
+  console.log(n);
+  this.setState({n: n});
+
+  console.log(this.state.n);
+  console.log(this.state.newGameFlag);
+  this.simulateInnings();
+  //console.log(this.props.games.games);
+  //let newGameFlag = 1;
+  //this.setState({newGameFlag: newGameFlag});
+
+
+
 
 }
 
+displayStartSecondInnings = () => {
+
+  if (this.state.newGameFlag === 2 ) {
+    return (
+    <Button rounded large warning style={styles.largeButton}
+      onPress={() => this.goToSefcondInnings()} >
+      <Text style={styles.buttonTextBack}><Icon name='ios-arrow-back' style={styles.buttonTextBack} /> Start second innings</Text>
+    </Button>
+    )
+  }
+  else {
+    //nothing.
+  }
+}
 
 
   render() {
+    console.log(this.props.games.games);
+    console.log(this.state.totalWickets);
+    console.log(this.state.totalRuns);
+    console.log(this.state.totalOver);
+    console.log(this.state.totalBall);
+    console.log(this.state.runRate);
+    console.log(this.state.simRuns);
+    console.log(this.state.simRunEvents);
+
     return (
     <Container>
+    <NavigationEvents
+                onDidFocus={() => console.log('Refreshed')}
+                />
     <Header style={styles.headerStyle}>
       <Left size={1}>
         <Icon name="menu" onPress={() => this.props.navigation.openDrawer()} style={{color: '#fff', paddingLeft: 20, marginTop: 'auto', marginBottom: 'auto' }} />
@@ -292,9 +644,7 @@ else {
         </Col>
       </Row>
       <Row size={5}>
-        <Col style={styles.ballCircle}>
-          <Text style={styles.textBall}>{this.state.simRuns}</Text>
-        </Col>
+        {this.getSimRuns()}
       </Row>
       <Row size={2}>
         <Col style={styles.ballCircleRuns}>
@@ -302,16 +652,13 @@ else {
             <Text style={styles.textBallRuns}>{this.state.totalRuns}/{this.state.totalWickets}</Text>
           </Row>
           <Row size={1}>
-            <Text style={styles.textBallOvers}>({this.state.totalOver}.{this.state.totalBall})</Text>
+            <Text style={styles.textBallOvers}>({this.state.totalOver}.{this.state.totalBall} overs, {this.state.runRate})</Text>
           </Row>
         </Col>
       </Row>
     </Content>
     <Footer style={{ height: 100, backgroundColor: 'transparent', borderTopWidth: 0, backgroundColor: 'transparent', elevation: 0, shadowOpacity: 0 }}>
-    <Button rounded large warning style={styles.largeButton}
-        onPress={() => this.props.navigation.navigate('Game')} >
-        <Text style={styles.buttonTextBack}><Icon name='ios-arrow-back' style={styles.buttonTextBack} /> Back to game</Text>
-      </Button>
+      {this.displayStartSecondInnings()}
     </Footer>
     </LinearGradient>
   </Container>
@@ -324,6 +671,10 @@ const mapStateToProps = state => ({
   gameRuns: state.gameRuns,
   ball: state.ball,
   players: state.players,
+  games: state.games,
+  teamPlayers: state.teamPlayers,
+  gamesList: state.gamesList,
+  firstInningsRuns: state.firstInningsRuns,
 });
 
 export default connect(mapStateToProps)(SimulateFirstInnings);
@@ -382,6 +733,18 @@ const styles = StyleSheet.create({
       elevation: 0,
       shadowOpacity: 0,
     },
+    generateInningsLargeButton: {
+      width: '100%',
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 'auto',
+      marginRight: 'auto',
+      marginBottom: 'auto',
+      marginLeft: 'auto',
+      elevation: 0,
+      shadowOpacity: 0,
+    },
     buttonText: {
       fontSize: PixelRatio.get() === 1 ? 28 : PixelRatio.get() === 1.5 ? 32 : PixelRatio.get() === 2 ? 36 : 40,
       color: '#c471ed',
@@ -393,6 +756,15 @@ const styles = StyleSheet.create({
     },
     buttonTextBack: {
       fontSize: 20,
+      color: '#c471ed',
+      marginTop: 'auto',
+      marginRight: 'auto',
+      marginBottom: 'auto',
+      marginLeft: 'auto',
+      fontWeight: '200',
+    },
+    generateInningsButtonText: {
+      fontSize: 40,
       color: '#c471ed',
       marginTop: 'auto',
       marginRight: 'auto',
@@ -440,7 +812,7 @@ const styles = StyleSheet.create({
   },
   ballCircle: {
     width: '100%',
-    height: 300,
+    height: 200,
     borderRadius: 60 / 2,
     backgroundColor: '#fff',
     borderColor: '#fff',
@@ -449,7 +821,7 @@ const styles = StyleSheet.create({
   },
   textBall: {
     color: '#c471ed',
-    fontSize: 200,
+    fontSize: 150,
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: 'auto',

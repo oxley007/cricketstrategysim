@@ -21,10 +21,11 @@ import {
 //import ProHome from './Components/App/ProHome.js';
 //import FinishTransaction from './Components/App/FinishTransaction.js';
 //import Settings from './Components/App/Settings.js';
-import GameList from './Components/App/GameList.js';
+import GameListNew from './Components/App/GameList.js';
 import Loading from './Components/App/Loading.js';
 import SignUp from './Components/App/SignUp.js';
 import Login from './Components/App/Login.js';
+import SignOut from './Components/App/SignOut.js';
 import Game from './Components/Game/Game.js';
 import SimulateFirstInnings from './Components/Game/SimulateFirstInnings.js';
 import OverBowled from './Components/GameOverBowled/OverBowled.js';
@@ -35,6 +36,8 @@ import TooCloseToCall from './Components/GameWicketCheck/TooCloseToCall.js';
 import Scorebook from './Components/App/Scorebook.js';
 import Main from './Components/App/Main.js';
 import GameAddPlayers from './Components/GameAddPlayers/GameAddPlayers.js';
+import GameAddPreBuiltTeam from './Components/GameAddPlayers/GameAddPreBuiltTeam.js';
+import HitRuns from './Components/Board/HitRuns.js';
 //import HeaderDisplay from './Components/HeaderComponents/HeaderDisplay.js';
 import {Header,Left,Right,Icon} from 'native-base';
 
@@ -71,14 +74,23 @@ const RootStack = createDrawerNavigator(
     Loading: {
       screen: Loading,
     },
+    HitRuns: {
+      screen: HitRuns,
+    },
     SignUp: {
       screen: SignUp,
     },
     Login: {
       screen: Login,
     },
-    GameList: {
-      screen: GameList,
+    GameAddPlayers: {
+      screen: GameAddPlayers,
+    },
+    GameListNew: {
+      screen: GameListNew,
+    },
+    SignOut: {
+      screen: SignOut,
     },
     Game: {
       screen: Game,
@@ -98,8 +110,8 @@ const RootStack = createDrawerNavigator(
     TooCloseToCall: {
       screen: TooCloseToCall,
     },
-    GameAddPlayers: {
-      screen: GameAddPlayers,
+    GameAddPreBuiltTeam: {
+      screen: GameAddPreBuiltTeam,
     },
     SimulateFirstInnings: {
       screen: SimulateFirstInnings,

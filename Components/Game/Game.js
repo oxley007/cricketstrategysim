@@ -6,6 +6,8 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import { StyleSheet, PixelRatio, ScrollView, View, Text, TextInput, Platform, Image, FlatList, Dimensions } from 'react-native';
 
 import { connect } from "react-redux";
+import { updateTeamPlayers } from '../../Reducers/teamPlayers';
+import { updatePlayers } from '../../Reducers/players';
 
 import DisplayGames from '../Game/DisplayGames';
 import TabOne from './GameMain';
@@ -19,16 +21,77 @@ class Game extends React.Component {
     this.ref = firebase.firestore().collection(currentUser.uid).doc('players');
     this.state = {
         loading: true,
+        isLoaded: false,
         players: [],
     };
   }
 
+
+  state = {
+    teamPlayers: this.props.teamPlayers.teamPlayers || [],
+    players: this.props.players.players || [],
+    facingBall: this.props.players.facingBall || 1,
+  };
+
+  handleChange = ( teamPlayers, players, firstInningsRuns ) => {
+    this.setState({ teamPlayers });
+    this.setState({ players });
+    this.setState({ firstInningsRuns });
+  };
+
   componentDidMount() {
+    console.log(this.props.players.facingBall);
     //SplashScreen.hide()
     const { currentUser } = firebase.auth()
     this.setState({ currentUser })
     const players = [];
     //this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+
+    let allPlayers = this.props.players.players
+    console.log(allPlayers);
+
+    let id = 0
+    let batterFlag = 2;
+    allPlayers.map(player => {
+      console.log('hit 3');
+      console.log(player);
+      if (id === 1 || id === 2) {
+        batterFlag = 0;
+      }
+      else {
+        batterFlag = 2;
+      }
+
+      /*
+      players.push({
+        id,
+        batterFlag,
+        player
+      });
+      */
+      console.log(players);
+      id++
+      console.log(id);
+      });
+
+      console.log('hit');
+      console.log(allPlayers);
+
+      const facingBall = this.props.players.facingBall;
+
+      console.log(facingBall);
+
+      console.log('hit 2');
+    console.log(players);
+    this.setState({
+      players: players,
+      facingBall: facingBall,
+    }, function () {
+      const { players, facingBall } = this.state
+      this.props.dispatch(updatePlayers(this.state.players, this.state.facingBall));
+    })
+
+    /*
     this.ref.get().then(function(documentSnapshot) {
   console.log(documentSnapshot);
   console.log(documentSnapshot.data());
@@ -39,6 +102,7 @@ class Game extends React.Component {
   let id = 0
   let batterFlag = 2;
   allPlayers.map(player => {
+    console.log('hit 3');
     console.log(player);
     if (id === 1 || id === 2) {
       batterFlag = 0;
@@ -55,15 +119,27 @@ class Game extends React.Component {
     });
     console.log(players);
     id++
+    console.log(id);
     });
 
+    console.log('hit');
+    console.log(allPlayers);
 
+    console.log('hit 2');
+  console.log(players);
+  this.setState({
+    isLoaded: true,
+    players: players
+  });
+
+  console.log(this.props.teamPlayers.teamPlayers);
+  //this.setState({ players });
+  console.log(this.state.players);
 
 })
+*/
 
-console.log(players);
-this.setState({ players });
-console.log(this.state.players);
+
 
 }
   /*
@@ -89,6 +165,7 @@ console.log(this.state.players);
 
 
 componentWillUnmount() {
+  console.log('componentWillUnmount');
     this.unsubscribe();
 }
 
@@ -116,8 +193,9 @@ onCollectionUpdate = (querySnapshot) => {
 */
 
   render() {
-    console.log(this.state.players);
     console.log('Hit Game!');
+    console.log(this.props.players.players);
+
     return (
     <Container>
     <Header hasTabs style={styles.headerStyle}>
@@ -145,7 +223,7 @@ onCollectionUpdate = (querySnapshot) => {
             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 1}}
             locations={[0,0.9,0.9]} colors={['#12c2e9', '#c471ed']} style={styles.linearGradient}>
               <FlatList
-              data={this.state.players}
+              data={this.props.players.players}
               renderItem={({ item }) => <DisplayBattingCard {...item} />}
               />
             </LinearGradient>
@@ -156,7 +234,12 @@ onCollectionUpdate = (querySnapshot) => {
   }
 }
 
-export default Game;
+const mapStateToProps = state => ({
+  teamPlayers: state.teamPlayers,
+  players: state.players,
+});
+
+export default connect(mapStateToProps)(Game);
 
 
 const styles = StyleSheet.create({

@@ -13,7 +13,7 @@ export default class Loading extends React.Component {
   componentDidMount() {
     //SplashScreen.hide()
     firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? 'GameList' : 'SignUp')
+      this.props.navigation.navigate(user ? 'GameListNew' : 'SignUp')
     })
   }
 
@@ -36,7 +36,7 @@ export default class Loading extends React.Component {
               </Row>
               <Row style={styles.container}>
                 <Text style={styles.whiteText}>Loading...</Text>
-              </Row>    
+              </Row>
             </Col>
           </Content>
       </LinearGradient>

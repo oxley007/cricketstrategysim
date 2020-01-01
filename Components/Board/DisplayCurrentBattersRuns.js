@@ -64,9 +64,54 @@ class DisplayCurrentBatters extends Component {
 
       console.log(batterRuns);
 
+      const battingStrikeRateRaw = (batterRuns / ballCount) * 100;
+      console.log(battingStrikeRateRaw);
+
+      let battingStrikeRate = 0;
+      if (isNaN(battingStrikeRateRaw)) {
+        battingStrikeRate = 0;
+      }
+      else {
+      battingStrikeRate = battingStrikeRateRaw.toFixed(0);
+    }
+    console.log(battingStrikeRate);
+
+      if (battingStrikeRate <= 30 ) {
         return (
-              <Text style={styles.batterText}>{batterRuns} ({ballCount})</Text>
+              <Text><Text style={styles.batterText}>{batterRuns} ({ballCount}) </Text><Text style={styles.batterTextSRRed}> S/R: {battingStrikeRate} </Text></Text>
             )
+      }
+      else if (battingStrikeRate <= 60 ) {
+        return (
+              <Text><Text style={styles.batterText}>{batterRuns} ({ballCount}) </Text><Text style={styles.batterTextSROrange}> S/R: {battingStrikeRate} </Text></Text>
+            )
+      }
+      else if (battingStrikeRate <= 100 ) {
+        return (
+              <Text><Text style={styles.batterText}>{batterRuns} ({ballCount}) </Text><Text style={styles.batterTextSRWhite}> S/R: {battingStrikeRate} </Text></Text>
+            )
+      }
+      else if (battingStrikeRate <= 120 ) {
+        return (
+              <Text><Text style={styles.batterText}>{batterRuns} ({ballCount}) </Text><Text style={styles.batterTextSRYellow}> S/R: {battingStrikeRate} </Text></Text>
+            )
+      }
+      else if (battingStrikeRate <= 140 ) {
+        return (
+              <Text><Text style={styles.batterText}>{batterRuns} ({ballCount}) </Text><Text style={styles.batterTextSRPooGreen}> S/R: {battingStrikeRate} </Text></Text>
+            )
+      }
+      else if (battingStrikeRate > 140 ) {
+        return (
+              <Text><Text style={styles.batterText}>{batterRuns} ({ballCount}) </Text><Text style={styles.batterTextSRGreen}> S/R: {battingStrikeRate} </Text></Text>
+            )
+      }
+      else {
+        return (
+              <Text><Text style={styles.batterText}>{batterRuns} ({ballCount}) </Text><Text style={styles.batterTextSRWhite}> S/R: {battingStrikeRate} </Text></Text>
+            )
+      }
+
   }
 
 
@@ -101,6 +146,42 @@ const styles = StyleSheet.create({
   },
   batterText: {
     color: '#fff'
+  },
+  batterTextSRGreen: {
+    width: 200,
+    height: '120%',
+    backgroundColor: '#7CFC00',
+    color: '#c471ed',
+  },
+  batterTextSRRed: {
+    width: 200,
+    height: '120%',
+    backgroundColor: '#FF69B4',
+    color: '#fff',
+  },
+  batterTextSROrange: {
+    width: 200,
+    height: '120%',
+    backgroundColor: '#FF8300',
+    color: '#fff',
+  },
+  batterTextSRPooGreen: {
+    width: 200,
+    height: '120%',
+    backgroundColor: '#f7ff00',
+    color: '#c471ed',
+  },
+  batterTextSRYellow: {
+    width: 200,
+    height: '120%',
+    backgroundColor: '#ffffed',
+    color: '#c471ed',
+  },
+  batterTextSRWhite: {
+    width: 200,
+    height: '120%',
+    backgroundColor: '#fff',
+    color: '#c471ed',
   }
 
 });

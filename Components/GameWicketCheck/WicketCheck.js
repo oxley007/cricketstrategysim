@@ -18,7 +18,7 @@ class WicketCheck extends React.Component {
     const { currentUser } = firebase.auth()
     super(props);
     this.ref = firebase.firestore().collection(currentUser.uid);
-    this.refPlayers = firebase.firestore().collection(currentUser.uid).doc('players');
+    //this.refPlayers = firebase.firestore().collection(currentUser.uid).doc('players');
     this.state = {
         textInput: '',
         textInputBatter: '',
@@ -28,6 +28,7 @@ class WicketCheck extends React.Component {
         cardWicket: 0,
         randomClick: 1,
         incrementer: null,
+        playera: [],
     };
     this.rImages = [require('../Board/random/a-hearts.png'),require('../Board/random/2-hearts.png'),require('../Board/random/3-hearts.png'),require('../Board/random/4-hearts.png'),require('../Board/random/5-hearts.png'),require('../Board/random/6-hearts.png'),require('../Board/random/7-hearts.png'),require('../Board/random/a-diamonds.png'),require('../Board/random/2-diamonds.png'),require('../Board/random/3-diamonds.png'),require('../Board/random/4-diamonds.png'),require('../Board/random/5-diamonds.png'),require('../Board/random/6-diamonds.png'),require('../Board/random/7-diamonds.png'),require('../Board/random/a-spades.png'),require('../Board/random/2-spades.png'),require('../Board/random/3-spades.png'),require('../Board/random/4-spades.png'),require('../Board/random/5-spades.png'),require('../Board/random/6-spades.png'),require('../Board/random/7-spades.png'),require('../Board/random/a-clubs.png'),require('../Board/random/2-clubs.png'),require('../Board/random/3-clubs.png'),require('../Board/random/4-clubs.png'),require('../Board/random/5-clubs.png'),require('../Board/random/6-clubs.png'),require('../Board/random/7-clubs.png')]
   }
@@ -61,6 +62,7 @@ class WicketCheck extends React.Component {
     const { currentUser } = firebase.auth()
     this.setState({ currentUser })
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+    //this.refPlayers.onSnapshot(this.onDocCollectionUpdate)
     //this.refPlayers.onSnapshot(this.onDocCollectionUpdate)
   }
 
@@ -110,6 +112,15 @@ handleWicketStart = () => {
       )}
     }, secValue);
   }
+}
+
+onDocCollectionUpdate = (allPlayers, facingBall) => {
+
+  this.ref.doc("players").update({
+    players: allPlayers,
+    facingBall: facingBall,
+  });
+
 }
 
 handleWicket = () => {
@@ -214,30 +225,27 @@ handleWicket = () => {
       if (ball === 6 || ball === 12 || ball === 18 || ball === 24 || ball === 30 || ball === 36 || ball ===42 || ball === 48 ||
       ball === 54 || ball === 60 || ball === 66 || ball === 72 || ball === 78 || ball === 84 || ball === 90 || ball === 96 ||
       ball === 102 || ball === 108 || ball === 114 || ball === 120 ) {
-        if (facingBall === 1 && (runs === 1 || runs === 3)) {
-          facingBall = 1;
-        }
-        else if (facingBall === 2 && (runs === 1 || runs === 3)) {
-            facingBall = 2;
-        }
-        else if (facingBall === 1 && (runs === 0 || runs === 2 || runs === 4 || runs === 6 )) {
+        if (facingBall === 1) {
           facingBall = 2;
         }
-        else {
-          facingBall = 1;
+        else if (facingBall === 2) {
+            facingBall = 1;
         }
       } else {
-        if (runs === 1 || runs === 3) {
           if (facingBall === 1) {
-            facingBall = 2;
-          }
-          else {
             facingBall = 1;
           }
+          else {
+            facingBall = 2;
+          }
       }
-    }
+
+      //************ WICKET ON LAST BALL OF INNIBGS TO DO!!!!!!!!!!!! *******************//
+
+      //*********************************************************************//
+
       console.log(facingBall);
-      this.setState({facingBall: facingBall});
+      //this.setState({facingBall: facingBall});
 
       //handle wicket event to remove batsman.
       //Get total wickets
@@ -264,6 +272,52 @@ handleWicket = () => {
           if (player.id === facingBatter) {
             //batterFlag = 1;
             allPlayers[player.id].batterFlag = 1;
+            const scoreTwo = allPlayers[player.id].scoreOne;
+            const scoreThree = allPlayers[player.id].scoreTwo;
+
+            let sum = a => a.reduce((acc, item) => acc + item);
+            const gameRunEventsNew = this.props.gameRuns.gameRunEvents;
+
+            let ballCount = gameRunEventsNew.map(acc => {
+              console.log(acc);
+              return 1;
+            });
+            let ball = sum(ballCount.map(acc => Number(acc)));
+
+            let outs = 0;
+            if (allPlayers[player.id].outs < 3 && ball != 120) {
+              outs = allPlayers[player.id].outs
+              outs++
+            }
+            else {
+              outs = 3;
+            }
+
+            let batterRunsCount = gameRunEvents.map(acc => {
+              console.log(acc);
+              if (acc.batterID === allPlayers[player.id]) {
+                console.log(acc.runsValue);
+                return [acc.runsValue];
+              }
+              else {
+                  console.log(acc.runsValue);
+                  return 0;
+                }
+              });
+
+              console.log(batterRunsCount);
+
+              const batterRuns = sum(batterRunsCount.map(acc => Number(acc)));
+
+              console.log(batterRuns);
+
+
+            allPlayers[player.id].batterFlag = 1;
+            allPlayers[player.id].scoreOne = batterRuns;
+            allPlayers[player.id].scoreTwo = scoreTwo;
+            allPlayers[player.id].scoreThree = scoreThree;
+            allPlayers[player.id].outs = outs;
+
             console.log(allPlayers);
 
           }
@@ -277,6 +331,7 @@ handleWicket = () => {
       })
 
       console.log(allPlayers);
+      console.log(facingBall);
       this.setState({
         players: allPlayers,
         facingBall: facingBall,
@@ -286,6 +341,12 @@ handleWicket = () => {
       })
 
       console.log(this.props.players.players);
+      console.log(this.props.players.facingBall);
+
+      const { currentUser } = firebase.auth()
+      this.setState({ currentUser })
+      //this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+      //this.onDocCollectionUpdate(allPlayers, facingBall);
 
     }
 
@@ -375,19 +436,31 @@ handleWicket = () => {
       }
       let numberOverValue = Number(totalOver);
 
+      const { navigation } = this.props;
+      const displayId = navigation.getParam('displayId');
+      console.log(displayId);
+
       if (cardColor === 'red') {
+
         setTimeout(() => {
-          this.props.navigation.navigate('WicketOut');
+
+          this.props.navigation.navigate('WicketOut', {
+            displayId: displayId,
+            });
           }, 1000);  //5000 milliseconds
         }
         else if (cardColor === 'too close to call') {
           setTimeout(() => {
-            this.props.navigation.navigate('TooCloseToCall');
+            this.props.navigation.navigate('TooCloseToCall', {
+              displayId: displayId,
+            });
             }, 1000);  //5000 milliseconds
         }
         else {
           setTimeout(() => {
-            this.props.navigation.navigate('WicketNotOut');
+            this.props.navigation.navigate('WicketNotOut', {
+              displayId: displayId,
+            });
             }, 1000);  //5000 milliseconds
         }
     }

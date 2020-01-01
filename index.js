@@ -11,6 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import App from './App.js';
 //import App from './App.js';
 
+
 /*
 import SideBar from "./Components/SideBar/SideBar.js";
 import { DrawerNavigator } from "react-navigation";

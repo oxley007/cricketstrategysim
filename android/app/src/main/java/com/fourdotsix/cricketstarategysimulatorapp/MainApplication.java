@@ -3,6 +3,7 @@ package com.fourdotsix.cricketstarategysimulatorapp;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -48,6 +49,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new ReactNativeRestartPackage(),
             new VectorIconsPackage(),
             new SplashScreenReactPackage(),
             new LinearGradientPackage(),

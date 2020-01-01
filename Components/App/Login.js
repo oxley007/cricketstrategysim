@@ -7,6 +7,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import firebase from 'react-native-firebase';
 
 export default class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        games: [],
+    };
+  }
+
   state = { email: '', password: '', errorMessage: null }
 
   handleLogin = () => {
@@ -14,7 +21,18 @@ export default class Login extends React.Component {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => this.props.navigation.navigate('GameList'))
+      .then(data => {
+        let uid = data.user.uid;
+        this.setState({ uid: uid });
+        console.log("User ID :- ", data.user.uid);
+      })
+      .then(() => {
+        console.log('signout function hit?');
+        this.setState({
+          games: [],
+       });
+      })
+      .then(() => this.props.navigation.navigate('GameListNew'))
       .catch(error => this.setState({ errorMessage: error.message }))
   }
 

@@ -64,6 +64,7 @@
 		E805C7D1B52744478D2B8FE0 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51006BF51EA04B0C80A4234F /* FontAwesome5_Regular.ttf */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
+		F3637462949B4AE6A07E5F5B /* libRCTRestart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6690C062B8E54645833585D6 /* libRCTRestart.a */; };
 		F67B23AC09A744D8B324E2E4 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D7544603896491C80C60A85 /* Ionicons.ttf */; };
 /* End PBXBuildFile section */
 
@@ -348,6 +349,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNGestureHandler;
 		};
+		999C3F882313C5450052ABFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE7261932F2E499C8CCED839 /* RCTRestart.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3245CDED1BFEE35C00EABF68;
+			remoteInfo = RCTRestart;
+		};
 		99C6411222C32B2C00202C2F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 99C6410D22C32B2C00202C2F /* BVLinearGradient.xcodeproj */;
@@ -409,6 +417,7 @@
 		5C04F7E60E3774814827066E /* Pods-CricketStarategySimulatorApp-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CricketStarategySimulatorApp-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CricketStarategySimulatorApp-tvOS/Pods-CricketStarategySimulatorApp-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5FC10BDC201F425C9EA85583 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
+		6690C062B8E54645833585D6 /* libRCTRestart.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTRestart.a; sourceTree = "<group>"; };
 		6B564824506040799CC11F05 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7A230A0DEF48DF21D545AA71 /* Pods-CricketStarategySimulatorApp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CricketStarategySimulatorApp-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CricketStarategySimulatorApp-tvOS/Pods-CricketStarategySimulatorApp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -422,6 +431,7 @@
 		B2121FE3F0701D7C33F213D3 /* Pods-CricketStarategySimulatorApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CricketStarategySimulatorApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-CricketStarategySimulatorApp/Pods-CricketStarategySimulatorApp.release.xcconfig"; sourceTree = "<group>"; };
 		C97DD56AE46E45398AF70E2E /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		CA346B7E0D05342E8E702E1C /* Pods-CricketStarategySimulatorApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CricketStarategySimulatorApp-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CricketStarategySimulatorApp-tvOSTests/Pods-CricketStarategySimulatorApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		CE7261932F2E499C8CCED839 /* RCTRestart.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTRestart.xcodeproj; path = "../node_modules/react-native-restart/ios/RCTRestart.xcodeproj"; sourceTree = "<group>"; };
 		D44F17E1CD994F9B8514C9BF /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		D818E2FB45E24EFC867000B5 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
 		D8E13BB553BB18534EEFFDDE /* Pods-CricketStarategySimulatorApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CricketStarategySimulatorApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CricketStarategySimulatorApp/Pods-CricketStarategySimulatorApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -465,6 +475,7 @@
 				66F583A38C047519D1E18159 /* libPods-CricketStarategySimulatorApp.a in Frameworks */,
 				8AEB10120B9847F8905B7DA1 /* libRNFirebase.a in Frameworks */,
 				C31AB45956904B429C6A5740 /* libRNGestureHandler.a in Frameworks */,
+				F3637462949B4AE6A07E5F5B /* libRCTRestart.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +668,7 @@
 			children = (
 				C97DD56AE46E45398AF70E2E /* libRNFirebase.a */,
 				6B564824506040799CC11F05 /* libRNGestureHandler.a */,
+				6690C062B8E54645833585D6 /* libRCTRestart.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -718,6 +730,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				8C34C759D8274A5CB8F8E751 /* RNFirebase.xcodeproj */,
 				F15B12AA239A49339804319A /* RNGestureHandler.xcodeproj */,
+				CE7261932F2E499C8CCED839 /* RCTRestart.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -763,6 +776,14 @@
 			isa = PBXGroup;
 			children = (
 				998EA31022C306BF0056B3A4 /* libRNGestureHandler.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		999C3F852313C5450052ABFA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				999C3F892313C5450052ABFA /* libRCTRestart.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -932,6 +953,10 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
+				},
+				{
+					ProductGroup = 999C3F852313C5450052ABFA /* Products */;
+					ProjectRef = CE7261932F2E499C8CCED839 /* RCTRestart.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -1239,6 +1264,13 @@
 			remoteRef = 998EA30F22C306BF0056B3A4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		999C3F892313C5450052ABFA /* libRCTRestart.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTRestart.a;
+			remoteRef = 999C3F882313C5450052ABFA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		99C6411322C32B2C00202C2F /* libBVLinearGradient.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1509,12 +1541,14 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = CricketStarategySimulatorAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1537,12 +1571,14 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = CricketStarategySimulatorAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1567,6 +1603,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = CricketStarategySimulatorApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1591,6 +1628,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = CricketStarategySimulatorApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1622,11 +1660,13 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = "CricketStarategySimulatorApp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1659,11 +1699,13 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = "CricketStarategySimulatorApp-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1695,11 +1737,13 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = "CricketStarategySimulatorApp-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1731,11 +1775,13 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-restart/ios/RCTRestart",
 				);
 				INFOPLIST_FILE = "CricketStarategySimulatorApp-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);

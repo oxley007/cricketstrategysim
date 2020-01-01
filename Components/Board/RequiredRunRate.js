@@ -14,7 +14,13 @@ import BallDiff from '../../Util/BallDiff.js';
 /* animation prackage */
 import * as Animatable from 'react-native-animatable';
 
-class RunsTotal extends Component {
+class RequiredRunRate extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        loading: true,
+    };
+  }
 
   state = {
     gameRunEvents: this.props.gameRuns.gameRunEvents || [{eventID: 0, runsValue: 0, ball: -1, runsType: 'deleted', batterID: 0, bowlerID: 0}],
@@ -46,7 +52,7 @@ class RunsTotal extends Component {
         }
       }
 
-getRunRate() {
+displayRequiredRunRate() {
   let gameRunEvents = this.props.gameRuns.gameRunEvents;
   let sum = a => a.reduce((acc, item) => acc + item);
 
@@ -60,6 +66,9 @@ console.log(ballTotal);
 ball = sum(ballTotal.map(acc => Number(acc)));
 console.log(ball);
 
+const ballsRemaining = 120 - ball;
+
+/*Work out current over.
 let totalBallDiff = BallDiff.getpartnershipDiffTotal(ball);
 let totalOver = totalBallDiff[0];
 console.log(totalOver);
@@ -67,30 +76,35 @@ console.log(totalOver);
 let totalBall = totalBallDiff[1];
 let overValue = totalOver + '.' +  totalBall;
 let numberOverValue = Number(overValue);
+*/
+
+
 
 //---------- end of calularte overs
 
-//Calculate the total runs
+//Calculate the total runs to go
 let totalRuns = sum(gameRunEvents.map(acc => Number(acc.runsValue)));
 console.log(totalRuns);
 
-//workout run rate:
+let runsRequired = this.props.firstInningsRuns - totalRuns;
+console.log(runsRequired);
+
+const requiredRunRate = (runsRequired / ballsRemaining) * 6;
+console.log(requiredRunRate);
+
+/*workout required run rate:
 console.log(numberOverValue);
 let runRate = totalRuns / numberOverValue;
 console.log(runRate);
+*/
 
-if (numberOverValue < 1) {
-  let runRateOneDecimal = '';
-  return ['RR: ~'];
-}
-else {
-  let runRateOneDecimal = parseFloat(runRate).toFixed(1);
-  return ['RR: ' + runRateOneDecimal];
-}
+
+  const requiredRunRateOneDecimal = parseFloat(requiredRunRate).toFixed(1);
+  return ['RRR: ' + requiredRunRateOneDecimal];
 
 }
 
-
+/*
 getDisplayRunsTotal() {
 
   let gameRunEvents = this.props.gameRuns.gameRunEvents;
@@ -121,8 +135,10 @@ getDisplayRunsTotal() {
 
   return [totalRuns, totalWickets, totalOver, totalBall]
 }
+*/
 
-displayRunsTotal() {
+/*
+displayRequiredRunRate() {
 
   let display = this.getDisplayRunsTotal();
   let totalRuns = display[0];
@@ -133,7 +149,10 @@ displayRunsTotal() {
   let getRunRate = this.getRunRate();
   let runRate = getRunRate[0];
 
-if (totalWickets < 10 && this.props.overPageFlag != true) {
+  //the seme, but with over to go.
+
+
+if (totalWickets < 10) {
 
   return (
     <Col style={styles.rowContainer} size={2}>
@@ -145,22 +164,6 @@ if (totalWickets < 10 && this.props.overPageFlag != true) {
     <Row style={{marginLeft: 5}} size={6}>
     <Animatable.Text animation="bounceIn" style={styles.overCountStyling} ref={ci => this.animatedTextRef = ci}>
       ({totalOver}.{totalBall}, {runRate})
-    </Animatable.Text>
-    </Row>
-  </Col>
-  );
-}
-else if (totalWickets < 10 && this.props.overPageFlag === true) {
-  return (
-    <Col style={styles.rowContainer} size={2}>
-      <Row style={{flexDirection: 'row', justifyContent: 'flex-end', marginRight: 5}} size={6}>
-    <Animatable.Text animation="bounceIn" style={styles.runCountStyling} ref={ci => this.animatedTextRefOne = ci}>
-      {totalRuns}/{totalWickets}
-    </Animatable.Text>
-    </Row>
-    <Row style={{marginLeft: 5}} size={6}>
-    <Animatable.Text animation="bounceIn" style={styles.overCountStyling} ref={ci => this.animatedTextRef = ci}>
-      ({totalOver}.{totalBall})
     </Animatable.Text>
     </Row>
   </Col>
@@ -183,14 +186,15 @@ else {
   );
 }
   }
+  */
 
   render() {
     return (
-        <Grid>
-          <Row size={10} style={styles.rowPadding}>
-            {this.displayRunsTotal()}
+          <Row>
+          <Animatable.Text animation="bounceIn" ref={ci => this.animatedTextRef = ci}>
+            {this.displayRequiredRunRate()}
+          </Animatable.Text>
           </Row>
-        </Grid>
     );
   }
 }
@@ -200,7 +204,7 @@ const mapStateToProps = state => ({
   ball: state.ball,
 });
 
-export default connect(mapStateToProps)(RunsTotal);
+export default connect(mapStateToProps)(RequiredRunRate);
 
 /*
 Native Base StyleSheet

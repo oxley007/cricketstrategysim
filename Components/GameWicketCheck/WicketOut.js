@@ -7,9 +7,16 @@ import { StyleSheet, PixelRatio, ScrollView, View, Text, TextInput, Platform, Im
 
 import { connect } from "react-redux";
 
+import CardBoard from '../../Util/CardBoard.js';
+import BallDiff from '../../Util/BallDiff.js';
+
 import { updateGameRuns } from '../../Reducers/gameRuns';
 import { updateOver } from '../../Reducers/over';
 import { updateGameId } from '../../Reducers/gameId';
+import { updatePlayers } from '../../Reducers/players';
+import { updateFirstInningsRuns } from '../../Reducers/firstInningsRuns';
+import { updateGames } from '../../Reducers/games';
+import { updatePlayerStats } from '../../Reducers/playerStats';
 
 
 class WicketOut extends React.Component {
@@ -17,6 +24,7 @@ class WicketOut extends React.Component {
     const { currentUser } = firebase.auth()
     super(props);
     this.ref = firebase.firestore().collection(currentUser.uid);
+    this.refPlayers = firebase.firestore().collection(currentUser.uid).doc('players');
     this.state = {
         textInput: '',
         textInputBatter: '',
@@ -28,28 +36,320 @@ class WicketOut extends React.Component {
   state = {
     gameID: this.props.gameID.gameID || '0',
     gameRunEvents: this.props.gameRuns.gameRunEvents || [],
+    keyID: this.props.gameID.keyID || '0',
+    eventID: this.props.gameRuns.eventID || 0,
+    players: this.props.players.players || [],
+    facingBall: this.props.players.facingBall || 0,
+    firstInningsRuns: this.props.firstInningsRuns.firstInningsRuns || 0,
+    games: this.props.games.games || [],
+    longestStreak: this.props.playerStats.longestStreak || 0,
   };
 
-  handleChange = ( gameRuns, gameID ) => {
+  handleChange = ( gameRuns, gameID, players, firstInningsRuns, games, playerStats ) => {
     this.setState({ gameID });
     this.setState({ gameRuns });
+    this.setState({ players });
+    this.setState({ firstInningsRuns });
+    this.setState({ games });
+    this.setState({ playerStats });
   };
-/*
-  componentDidMount() {
-    const { currentUser } = firebase.auth()
-    this.setState({ currentUser })
-    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
-}
 
-componentWillUnmount() {
-    this.unsubscribe();
+/*
+componentDidMount() {
+  const { currentUser } = firebase.auth()
+
+  this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+
+  this.refPlayers.onSnapshot(this.onDocCollectionUpdate)
+
 }
 */
 
+getNavigation = () => {
+
+    let sum = a => a.reduce((acc, item) => acc + item);
+
+    const gameRunEvents = this.props.gameRuns.gameRunEvents;
+    const eventID = this.props.gameRuns.eventID;
+    const gameId = this.props.gameID.gameID
+    console.log(gameId);
+    let keyID = this.props.gameID.keyID;
+    const allPlayers = this.props.players.players;
+    const facingBall = this.props.players.facingBall;
+    const firstInningsRuns =this.props.firstInningsRuns.firstInningsRuns;
+    const { navigation } = this.props;
+    const displayId = navigation.getParam('displayId');
+    console.log(displayId);
+    const totalRuns = sum(gameRunEvents.map(acc => Number(acc.runsValue)));
+    console.log(totalRuns);
+    let getWicketCount = BallDiff.getWicketCount(gameRunEvents);
+    let totalWickets = getWicketCount[0];
+    console.log(totalWickets);
+    const games = this.props.games.games;
+    const longestStreak = this.props.playerStats.longestStreak;
+
+
+
+    let filtered = '';
+    if (keyID === '0' || keyID === undefined) {
+      filtered = CardBoard.getFilteredKey(this.props.games.games, gameId);
+      console.log(filtered);
+
+      this.setState({
+        keyID: filtered,
+        gameID: gameId,
+      }, function () {
+        const { keyID, gameID } = this.state
+        this.props.dispatch(updateGameId(this.state.keyID, this.state.gameID));
+      })
+    }
+    else {
+      filtered = gameId;
+      console.log(filtered);
+    }
+
+    //filtered[0] = filtered;
+
+    console.log('ball and over more than 0.');
+  let highestScorers = CardBoard.getHighestScorers(gameRunEvents, allPlayers);
+  console.log(highestScorers);
+  let battersHighestScore = highestScorers[0];
+  let battersNameHighestScore = highestScorers[1];
+  let highestScoreBallCount = highestScorers[2];
+  let battersSecondHighestScore = highestScorers[3];
+  let battersNameSecondHighestScore = highestScorers[4];
+  let secondHighestScoreBallCount = highestScorers[5];
+
+  console.log(gameRunEvents);
+  console.log(firstInningsRuns);
+  console.log(totalRuns);
+
+  let game = {
+    displayId: displayId,
+    firstInningsRuns: firstInningsRuns,
+    gameId: gameId,
+    gameName: "Cricket Strategy Sim",
+    gameResult: 1,
+    players: allPlayers,
+    gameRunEvents: gameRunEvents,
+    key: filtered[0],
+    topScore: battersHighestScore[0][0],
+    topScorePlayer: battersNameHighestScore[0].player,
+    topScoreBalls: highestScoreBallCount,
+    topSecondScore: battersSecondHighestScore[0][0],
+    topSecondScorePlayer: battersNameSecondHighestScore[0].player,
+    topSecondBalls: secondHighestScoreBallCount,
+    totalRuns: totalRuns,
+    totalWickets: totalWickets,
+  }
+  this.ref.doc(filtered[0]).update({
+      gameRunEvents: gameRunEvents,
+      totalRuns: totalRuns,
+      players: allPlayers,
+      topScore: battersHighestScore[0][0],
+      topScorePlayer: battersNameHighestScore[0].player,
+      topScoreBalls: highestScoreBallCount,
+      topSecondScore: battersSecondHighestScore[0][0],
+      topSecondScorePlayer: battersNameSecondHighestScore[0].player,
+      topSecondBalls: secondHighestScoreBallCount,
+      totalWickets: totalWickets,
+      gameResult: 1,
+  });
+
+  winningStreak = 0;
+
+  this.ref.doc("playerStats").update({
+    winningStreak: winningStreak,
+    longestStreak: longestStreak,
+    highestPlayerScore: 0,
+    highestPlayerScoreId: 0,
+    highestTeamScore: 0,
+  });
+
+  console.log('check 1');
+
+  let gameResult = 1;
+
+  let gameComplete = {
+    displayId: displayId,
+    firstInningsRuns: firstInningsRuns,
+    gameId: gameId,
+    gameName: "Cricket Strategy Sim",
+    gameResult: gameResult,
+    players: allPlayers,
+    gameRunEvents: gameRunEvents,
+    key: filtered[0],
+    topScore: battersHighestScore[0][0],
+    topScorePlayer: battersNameHighestScore[0].player,
+    topScoreBalls: highestScoreBallCount,
+    topSecondScore: battersSecondHighestScore[0][0],
+    topSecondScorePlayer: battersNameSecondHighestScore[0].player,
+    topSecondBalls: secondHighestScoreBallCount,
+    totalRuns: totalRuns,
+    totalWickets: totalWickets,
+  }
+
+  console.log(gameComplete);
+  console.log('check 2');
+
+
+  let gameDisplayIdIndexCount = 0
+  let gameDisplayIdIndexArray = games.map(acc => {
+  console.log(acc);
+  console.log(acc.displayId);
+  if (acc.displayId  === displayId) {
+    console.log(acc.displayId);
+    return gameDisplayIdIndexCount;
+  }
+  else {
+    gameDisplayIdIndexCount++;
+    return 'na';
+  }
+  });
+
+  console.log('check 3');
+
+  console.log(gameDisplayIdIndexArray);
+
+  let gameDisplayIdIndex = gameDisplayIdIndexArray.filter( runs => runs != 'na')
+  console.log(gameDisplayIdIndex);
+
+  console.log('check 4');
+  console.log(games);
+  games.splice(gameDisplayIdIndex,1,gameComplete);
+
+  console.log('check 5');
+
+  this.setState({
+  games: games,
+  }, function () {
+    const { games } = this.state
+    this.props.dispatch(updateGames(this.state.games));
+  })
+
+  console.log('check 6');
+
+  console.log(this.props.games.games);
+
+  console.log(winningStreak);
+  console.log(longestStreak);
+
+  this.setState({
+  winningStreak: winningStreak,
+  longestStreak: longestStreak,
+  highestPlayerScore: 0,
+  highestPlayerScoreId: 0,
+  highestTeamScore: 0,
+  }, function () {
+    const { winningStreak, longestStreak, highestPlayerScore, highestPlayerScoreId, highestTeamScore } = this.state
+    this.props.dispatch(updatePlayerStats(this.state.winningStreak, this.state.longestStreak, this.state.highestPlayerScore, this.state.highestPlayerScoreId, this.state.highestTeamScore));
+  })
+
+  console.log('check 7');
+
+  console.log(this.props.playerStats.winningStreak);
+  console.log(this.props.playerStats.longestStreak);
+
+  //Add not out batsman runs here to player's Form attribute.
+
+    allPlayers.map(player => {
+      console.log(player);
+      console.log(player.id);
+      console.log('check 8');
+
+      if (player.batterFlag === 0) {
+        const scoreTwo = allPlayers[player.id].scoreOne;
+        const scoreThree = allPlayers[player.id].scoreTwo;
+        console.log('check 9');
+
+        let outs = 0;
+        if (allPlayers[player.id].outs <= 0) {
+          outs = 0;
+        }
+        else {
+          outs = allPlayers[player.id].outs
+          outs--
+        }
+
+        let batterRunsCount = gameRunEvents.map(acc => {
+          console.log(acc);
+          if (acc.batterID === allPlayers[player.id]) {
+            console.log(acc.runsValue);
+            return [acc.runsValue];
+          }
+          else {
+              console.log(acc.runsValue);
+              return 0;
+            }
+          });
+
+          console.log('check 10');
+          console.log(batterRunsCount);
+
+          const batterRuns = sum(batterRunsCount.map(acc => Number(acc)));
+
+          console.log(batterRuns);
+          console.log('check 11');
+
+        allPlayers[player.id].scoreOne = batterRuns;
+        allPlayers[player.id].scoreTwo = scoreTwo;
+        allPlayers[player.id].scoreThree = scoreThree;
+        allPlayers[player.id].outs = outs;
+
+        console.log(allPlayers);
+        console.log('check 12');
+
+      }
+  })
+
+  console.log(allPlayers);
+  console.log(facingBall);
+  this.setState({
+    players: allPlayers,
+    facingBall: facingBall,
+  }, function () {
+    const { players, facingBall } = this.state
+    this.props.dispatch(updatePlayers(this.state.players, this.state.facingBall));
+  })
+
+  console.log('check 13');
+
+  this.props.navigation.navigate('GameListNew')
+
+  }
+
+getNavigationText = () => {
+
+  let sum = a => a.reduce((acc, item) => acc + item);
+  const gameRunEvents = this.props.gameRuns.gameRunEvents;
+
+  let ballCount = gameRunEvents.map(acc => {
+    console.log(acc);
+    return 1;
+  });
+  let ball = sum(ballCount.map(acc => Number(acc)));
+
+  if (ball >= 120) {
+    return (
+    <Button rounded large warning style={styles.largeButton}
+    onPress={() => this.getNavigation()} >
+        <Text style={styles.buttonTextBack}><Icon name='ios-arrow-back' style={styles.buttonTextBack} /> Game over. End of Innings!</Text>
+      </Button>
+    )
+  }
+  else {
+    return (
+    <Button rounded large warning style={styles.largeButton}
+    onPress={() => this.props.navigation.navigate('Game')} >
+        <Text style={styles.buttonTextBack}><Icon name='ios-arrow-back' style={styles.buttonTextBack} /> Back to game</Text>
+      </Button>
+    )
+  }
+
+}
+
 
   render() {
-
-
     return (
     <Container>
     <Header style={styles.headerStyle}>
@@ -73,10 +373,7 @@ componentWillUnmount() {
       </Grid>
     </Content>
     <Footer style={{ height: 100, backgroundColor: 'transparent', borderTopWidth: 0, backgroundColor: 'transparent', elevation: 0, shadowOpacity: 0 }}>
-    <Button rounded large warning style={styles.largeButton}
-        onPress={() => this.props.navigation.navigate('Game')} >
-        <Text style={styles.buttonTextBack}><Icon name='ios-arrow-back' style={styles.buttonTextBack} /> Back to game</Text>
-      </Button>
+      {this.getNavigationText()}
     </Footer>
     </LinearGradient>
   </Container>
@@ -87,6 +384,10 @@ componentWillUnmount() {
 const mapStateToProps = state => ({
   gameRuns: state.gameRuns,
   gameID: state.gameID,
+  players: state.players,
+  firstInningsRuns: state.firstInningsRuns,
+  games: state.games,
+  playerStats: state.playerStats,
 });
 
 export default connect(mapStateToProps)(WicketOut);

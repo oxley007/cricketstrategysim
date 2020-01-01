@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import firebase from 'react-native-firebase';
 
 import { Container, Footer, Text, Button, Icon, H1 } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -16,6 +17,15 @@ import { updatePlayers } from '../../Reducers/players';
 
 
 class DisplayCurrentBatters extends Component {
+  constructor(props) {
+    const { currentUser } = firebase.auth()
+    super(props);
+    this.ref = firebase.firestore().collection(currentUser.uid);
+    this.refPlayers = firebase.firestore().collection(currentUser.uid).doc('players');
+    this.state = {
+        players: [],
+    };
+  }
 
   state = {
     gameID: this.props.gameID.gameID || '0',
@@ -31,6 +41,45 @@ class DisplayCurrentBatters extends Component {
     this.setState({ gameRuns });
     this.setState({ players });
   };
+
+
+  componentDidMount() {
+    const { currentUser } = firebase.auth()
+    this.setState({ currentUser })
+    this.refPlayers.onSnapshot(this.onDocCollectionUpdate)
+  }
+
+  onDocCollectionUpdate = (documentSnapshot) => {
+
+    let allPlayers = this.props.players.players;
+
+    console.log(allPlayers);
+    console.log(documentSnapshot.data().players);
+
+    if (allPlayers === [] || allPlayers === undefined || allPlayers === null || allPlayers.length < 1) {
+      console.log('allplays null hit?');
+      allPlayers = documentSnapshot.data().players;
+    }
+    else {
+      console.log('else all players from redux.');
+      allPlayers = this.props.players.players;
+    }
+
+      console.log(allPlayers);
+      this.setState({
+        players: allPlayers,
+      }, function () {
+        const { players } = this.state
+        this.props.dispatch(updatePlayers(this.state.players));
+      })
+
+      /*
+      this.setState({
+        players: allPlayers,
+      });
+      */
+
+    }
 
   getFacingBall = (facingBall, countCurrentBatter) => {
     console.log('getFacingBall hit');
@@ -59,9 +108,12 @@ class DisplayCurrentBatters extends Component {
 
     const players = this.props.players.players;
     const facingBall = this.props.players.facingBall;
+    console.log(facingBall);
+    //const facingBall = 0;
     console.log('facingBall hit?' + facingBall);
     let countCurrentBatter = 0;
 
+    console.log(players);
     return players.map(player => {
       console.log(player.batterFlag);
       console.log(player.id);
@@ -78,10 +130,10 @@ class DisplayCurrentBatters extends Component {
               <View style={{ flex: 1 }}>
                 {this.getFacingBall(facingBall, countCurrentBatter)}
               </View>
-              <View style={{ flex: 6 }}>
+              <View style={{ flex: 5 }}>
                       <Text style={styles.batterText}>{player.player}</Text>
               </View>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex: 3 }}>
                 <DisplayCurrentBattersRuns batterId={player.id} />
               </View>
             </View>
@@ -121,9 +173,9 @@ class DisplayCurrentBatters extends Component {
     console.log('Hit current batters');
     return (
 
-      <View>
+      <Col>
       {this.getCurrentBatter()}
-      </View>
+      </Col>
 
     );
   }

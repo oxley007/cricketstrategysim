@@ -7,13 +7,15 @@ import {AsyncStorage} from 'react-native';
 
 export const UPDATE_GAMEID = 'UPDATE_GAMEID';
 
-export const updateGameId = gameID => ({
+export const updateGameId = ( gameID, keyID ) => ({
   type: UPDATE_GAMEID,
   gameID,
+  keyID,
 });
 
 const initialState = {
   gameID: '0',
+  keyID: '0',
 };
 
 console.log('hitting rootReducer');
@@ -27,6 +29,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gameID: action.gameID,
+        keyID: action.keyID,
       };
     default:
       return state;

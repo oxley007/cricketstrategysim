@@ -7,9 +7,15 @@ import { StyleSheet, PixelRatio, ScrollView, View, Text, TextInput, Platform, Im
 
 import { connect } from "react-redux";
 
+import OverBowledBoard from './OverBowledBoard';
+import BoardDisplayStats from '../Board/BoardDisplayStats';
+import RunsTotal from '../Board/RunsTotal';
+
 import { updateGameRuns } from '../../Reducers/gameRuns';
 import { updateOver } from '../../Reducers/over';
 import { updateGameId } from '../../Reducers/gameId';
+import { updateFirstInningsRuns } from '../../Reducers/firstInningsRuns';
+import { updatePlayers } from '../../Reducers/players';
 
 
 class OverBowled extends React.Component {
@@ -28,11 +34,16 @@ class OverBowled extends React.Component {
   state = {
     gameID: this.props.gameID.gameID || '0',
     gameRunEvents: this.props.gameRuns.gameRunEvents || [],
+    firstInningsRuns: this.props.firstInningsRuns.firstInningsRuns || 0,
+    facingBall: this.props.players.facingBall || 1,
+    players: this.props.players.players || [],
   };
 
-  handleChange = ( gameRuns, gameID ) => {
+  handleChange = ( gameRuns, gameID, firstInningsRuns, players ) => {
     this.setState({ gameID });
     this.setState({ gameRuns });
+    this.setState({ firstInningsRuns });
+    this.setState({ players });
   };
 /*
   componentDidMount() {
@@ -46,10 +57,51 @@ componentWillUnmount() {
 }
 */
 
+gameNavigateBack = () => {
+
+  const gameRunEvents = this.props.gameRuns.gameRunEvents;
+  console.log(gameRunEvents);
+  let gameRunEventsLength = gameRunEvents.length;
+  console.log(gameRunEventsLength);
+  gameRunEventsLength--;
+  const runs = gameRunEvents[gameRunEventsLength].runsValue;
+  console.log(runs);
+
+  let facingBall = this.props.players.facingBall;
+  console.log(facingBall);
+
+  if (facingBall === 1 && (runs === 1 || runs === 3)) {
+    facingBall = 1;
+  }
+  else if (facingBall === 2 && (runs === 1 || runs === 3)) {
+      facingBall = 2;
+  }
+  else if (facingBall === 1 && (runs === 0 || runs === 2 || runs === 4 || runs === 6 )) {
+    facingBall = 2;
+  }
+  else {
+    facingBall = 1;
+  }
+
+  let allPlayers = this.props.players.players;
+
+  this.setState({
+    players: allPlayers,
+    facingBall: facingBall,
+  }, function () {
+    const { players, facingBall } = this.state
+    this.props.dispatch(updatePlayers(this.state.players, this.state.facingBall));
+  })
+
+  this.props.navigation.navigate('Game')
+
+}
+
+
+
 
   render() {
-
-
+    const firstInningsRuns = this.props.firstInningsRuns.firstInningsRuns;
     return (
     <Container>
     <Header style={styles.headerStyle}>
@@ -67,16 +119,22 @@ componentWillUnmount() {
     </Header>
     <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 1}}
     locations={[0,0.9,0.9]} colors={['#12c2e9', '#c471ed']} style={styles.linearGradient}>
-    <Content style={{ flex: 1, width: '100%'}}>
-      <Grid>
-          <Text>Over Bowled</Text>
-      </Grid>
+    <Content style={{ flex: 1, width: '100%', paddingLeft: 15, paddingRight: 15}}>
+      <OverBowledBoard />
     </Content>
-    <Footer style={{ height: 100, backgroundColor: 'transparent', borderTopWidth: 0, backgroundColor: 'transparent', elevation: 0, shadowOpacity: 0 }}>
-    <Button rounded large warning style={styles.largeButton}
-        onPress={() => this.props.navigation.navigate('Game')} >
-        <Text style={styles.buttonTextBack}><Icon name='ios-arrow-back' style={styles.buttonTextBack} /> Back to game</Text>
+    <Footer style={{ height: 50, backgroundColor: 'transparent', borderTopWidth: 0, backgroundColor: 'transparent', elevation: 0, shadowOpacity: 0 }}>
+    <Row>
+      <Col size={1}>
+      <Button style={styles.goButton} large success
+        onPress={() => this.gameNavigateBack()} >
+        <Text style={styles.goButtonText}>Play!</Text>
       </Button>
+      </Col>
+      <Col size={2} style={{backgroundColor: '#c471ed'}}>
+        <RunsTotal overPageFlag={true} />
+      </Col>
+      <BoardDisplayStats firstInningsRuns={firstInningsRuns} />
+    </Row>
     </Footer>
     </LinearGradient>
   </Container>
@@ -87,6 +145,8 @@ componentWillUnmount() {
 const mapStateToProps = state => ({
   gameRuns: state.gameRuns,
   gameID: state.gameID,
+  firstInningsRuns: state.firstInningsRuns,
+  players: state.players,
 });
 
 export default connect(mapStateToProps)(OverBowled);
@@ -100,9 +160,6 @@ const styles = StyleSheet.create({
     },
     linearGradient: {
       flex: 1,
-      paddingLeft: 15,
-      paddingRight: 15,
-      borderRadius: 5
     },
     textHeader: {
       color: '#fff',
@@ -189,5 +246,19 @@ const styles = StyleSheet.create({
       borderBottomWidth: 1,
       borderTopColor: '#fff',
       borderBottomColor: '#fff', backgroundColor: 'rgba(204, 204, 204, 0.4)'
-    }
+    },
+    goButton: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 0,
+    shadowOpacity: 0,
+    backgroundColor: '#77dd77',
+  },
+  goButtonText: {
+    color: '#fff',
+    fontSize: 30,
+  },
 });

@@ -308,6 +308,8 @@ const styles = StyleSheet.create({
       },
       rowPadding :{
         paddingTop: 15,
+        paddingLeft: 15, 
+          paddingRight: 15
       },
       colCenter: {
         alignItems: 'center',

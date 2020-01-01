@@ -11,6 +11,8 @@ import { updateRuns } from '../../Reducers/runs';
 import { updateOver } from '../../Reducers/over';
 import { updateBatterRuns } from '../../Reducers/batterRuns';
 import { updateGameId } from '../../Reducers/gameId';
+import { updateGames } from '../../Reducers/games';
+import { updatePlayers } from '../../Reducers/players';
 
 import GameDisplayRuns from './GameDisplayRuns';
 import DisplayScorecard from '../Game/DisplayScorecard';
@@ -32,20 +34,28 @@ class Game extends React.Component {
         loading: true,
         scorecard: [],
         docID: '',
+        scorecardTest: [{gameId: 111, title: 'AO', runs: 100, complete: 0}]
     };
   }
 
   state = {
     batterRuns: this.props.batterRuns.batterRuns || 0,
     gameID: this.props.gameID.gameID || '0',
+    games: this.props.games.games || [],
+    players: this.props.players.players || [],
+    facingBall: this.props.players.facingBall || 1,
   };
 
-  handleChange = ( batterRuns, gameID ) => {
+  handleChange = ( batterRuns, gameID, games, players ) => {
     this.setState({ batterRuns });
     this.setState({ gameID });
+    this.setState({ games });
+    this.setState({ players });
   };
 
   componentDidMount() {
+    console.log(this.props.games.games);
+    console.log('gameMain componentDidMount');
     const { currentUser } = firebase.auth()
     this.setState({ currentUser })
     this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
@@ -74,6 +84,8 @@ onCollectionUpdate = (querySnapshot) => {
     scorecard,
     loading: false,
  });
+
+ console.log(this.state.scorecard);
 }
 
   updateTextInput(value) {
@@ -99,14 +111,22 @@ onCollectionUpdate = (querySnapshot) => {
     </ScrollView>
     </Row>
       <Row>
+      {this.checkGameResult()}
       <FlatList
-          data={this.state.scorecard}
+          data={this.state.scorecardTest}
           renderItem={({ item }) => <DisplayScorecard {...item} />}
         />
       </Row>
     </Col>
     )
 
+  }
+
+  checkGameResult = () => {
+    console.log(this.props.games.games[0].gameResult);
+    if (this.props.games.games[0].gameResult === 0) {
+          console.log('hello!!');
+    }
   }
 
   runsTotal = () => {
@@ -215,6 +235,40 @@ onCollectionUpdate = (querySnapshot) => {
   }
   */
 
+  getBoardDisplayTopAttack = () => {
+
+    const players = this.props.players.players;
+    const facingBall = this.props.players.facingBall;
+
+    let countCurrentBatter = 0;
+    let aggBoardValue = 0;
+
+    const playerFacingRunsArray = players.map(player => {
+      console.log(player.batterFlag);
+      console.log(player.id);
+      console.log(player.aggBoard);
+      console.log(player.player);
+
+      if (player.batterFlag === 0 && facingBall === 1 && countCurrentBatter === 0) {
+        countCurrentBatter++
+        console.log(countCurrentBatter);
+        aggBoardValue = player.aggBoard
+      }
+      else if (player.batterFlag === 0 && facingBall === 2 && countCurrentBatter === 0) {
+        countCurrentBatter = countCurrentBatter + 2;
+      }
+      else if (player.batterFlag === 0 && facingBall === 2 && countCurrentBatter === 2) {
+        aggBoardValue = player.aggBoard
+      }
+          console.log(aggBoardValue);
+
+    });
+
+    console.log(aggBoardValue);
+
+    return (<BoardDisplayTopAttack style={{paddingLeft: 15, paddingRight: 15}} aggBoardValue={aggBoardValue} overPageFlag={false} />)
+  }
+
   render() {
     if (this.state.loading) {
     return null; // or render a loading icon
@@ -227,13 +281,12 @@ onCollectionUpdate = (querySnapshot) => {
 
     <Content style={{ flex: 1, width: '100%'}}>
 
-    <BoardDisplayTopAttack />
-      <Board navigation={this.props.navigation} />
+    {this.getBoardDisplayTopAttack()}
+
+      <RunsPerBall />
 
     </Content>
-    <Footer style={{ height: 100, backgroundColor: 'transparent', borderTopWidth: 0, backgroundColor: 'transparent', elevation: 0, shadowOpacity: 0 }}>
-      <RunsPerBall />
-    </Footer>
+    <Board navigation={this.props.navigation} />
     </LinearGradient>
   </Container>
   );
@@ -243,6 +296,8 @@ onCollectionUpdate = (querySnapshot) => {
 const mapStateToProps = state => ({
   batterRuns: state.batterRuns,
   gameID: state.gameID,
+  games: state.games,
+  players: state.players,
 });
 
 export default connect(mapStateToProps)(Game);
@@ -256,8 +311,6 @@ const styles = StyleSheet.create({
     },
     linearGradient: {
       flex: 1,
-      paddingLeft: 15,
-      paddingRight: 15,
     },
     textHeader: {
       color: '#fff',
