@@ -12,7 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "native-base": "^2.12.1",
     "react": "16.8.3",
     "react-compose": "^2.0.0",
